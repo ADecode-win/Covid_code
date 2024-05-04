@@ -17,7 +17,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.mount("/style", StaticFiles(directory="style"), name="style")
+app.mount("/style", StaticFiles(directory="../style"), name="style")
 
 class COVIDData(BaseModel):
     dateRep: str
