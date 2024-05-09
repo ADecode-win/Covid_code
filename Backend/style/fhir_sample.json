@@ -1,0 +1,74 @@
+[
+    {
+        "resourceType": "Observation",
+        "id": "observation-14/12/2020",
+        "status": "final",
+        "code": {
+            "coding": [
+                {
+                    "system": "http://loinc.org",
+                    "code": "94531-1",
+                    "display": "COVID-19 cases reported"
+                }
+            ]
+        },
+        "subject": {
+            "reference": "Country/Albania"
+        },
+        "effectiveDateTime": "14/12/2020",
+        "valueQuantity": {
+            "value": 788,
+            "unit": "count",
+            "system": "http://unitsofmeasure.org",
+            "code": "count"
+        }
+    },
+    {
+        "resourceType": "Observation",
+        "id": "observation-13/12/2020",
+        "status": "final",
+        "code": {
+            "coding": [
+                {
+                    "system": "http://loinc.org",
+                    "code": "94531-1",
+                    "display": "COVID-19 cases reported"
+                }
+            ]
+        },
+        "subject": {
+            "reference": "Country/Albania"
+        },
+        "effectiveDateTime": "13/12/2020",
+        "valueQuantity": {
+            "value": 879,
+            "unit": "count",
+            "system": "http://unitsofmeasure.org",
+            "code": "count"
+        }
+    },
+    {
+        "resourceType": "Observation",
+        "id": "observation-12/12/2020",
+        "status": "final",
+        "code": {
+            "coding": [
+                {
+                    "system": "http://loinc.org",
+                    "code": "94531-1",
+                    "display": "COVID-19 cases reported"
+                }
+            ]
+        },
+        "subject": {
+            "reference": "Country/Albania"
+        },
+        "effectiveDateTime": "12/12/2020",
+        "valueQuantity": {
+            "value": 802,
+            "unit": "count",
+            "system": "http://unitsofmeasure.org",
+            "code": "count"
+        }
+    }
+]
