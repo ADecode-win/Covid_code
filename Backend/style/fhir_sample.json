@@ -1,74 +1,177 @@
-[
-    {
-        "resourceType": "Observation",
-        "id": "observation-14/12/2020",
-        "status": "final",
-        "code": {
-            "coding": [
-                {
-                    "system": "http://loinc.org",
-                    "code": "94531-1",
-                    "display": "COVID-19 cases reported"
-                }
-            ]
+{
+    "resourceType": "Bundle",
+    "type": "collection",
+    "entry": [
+        {
+            "fullUrl": "urn:uuid:observation-14/12/2020",
+            "resource": {
+                "resourceType": "Observation",
+                "id": "observation-14/12/2020",
+                "status": "final",
+                "code": {
+                    "coding": [
+                        {
+                            "system": "http://loinc.org",
+                            "code": "94500-6",
+                            "display": "COVID-19 case report"
+                        }
+                    ]
+                },
+                "subject": {
+                    "reference": "Country/ALB"
+                },
+                "effectiveDateTime": "14/12/2020",
+                "component": [
+                    {
+                        "code": {
+                            "coding": [
+                                {
+                                    "system": "http://loinc.org",
+                                    "code": "94531-1",
+                                    "display": "Number of COVID-19 cases"
+                                }
+                            ]
+                        },
+                        "valueQuantity": {
+                            "value": 788,
+                            "unit": "count",
+                            "system": "http://unitsofmeasure.org",
+                            "code": "count"
+                        }
+                    },
+                    {
+                        "code": {
+                            "coding": [
+                                {
+                                    "system": "http://loinc.org",
+                                    "code": "9279-1",
+                                    "display": "Number of deaths"
+                                }
+                            ]
+                        },
+                        "valueQuantity": {
+                            "value": 14,
+                            "unit": "count",
+                            "system": "http://unitsofmeasure.org",
+                            "code": "count"
+                        }
+                    }
+                ]
+            }
         },
-        "subject": {
-            "reference": "Country/Albania"
+        {
+            "fullUrl": "urn:uuid:observation-13/12/2020",
+            "resource": {
+                "resourceType": "Observation",
+                "id": "observation-13/12/2020",
+                "status": "final",
+                "code": {
+                    "coding": [
+                        {
+                            "system": "http://loinc.org",
+                            "code": "94500-6",
+                            "display": "COVID-19 case report"
+                        }
+                    ]
+                },
+                "subject": {
+                    "reference": "Country/ALB"
+                },
+                "effectiveDateTime": "13/12/2020",
+                "component": [
+                    {
+                        "code": {
+                            "coding": [
+                                {
+                                    "system": "http://loinc.org",
+                                    "code": "94531-1",
+                                    "display": "Number of COVID-19 cases"
+                                }
+                            ]
+                        },
+                        "valueQuantity": {
+                            "value": 879,
+                            "unit": "count",
+                            "system": "http://unitsofmeasure.org",
+                            "code": "count"
+                        }
+                    },
+                    {
+                        "code": {
+                            "coding": [
+                                {
+                                    "system": "http://loinc.org",
+                                    "code": "9279-1",
+                                    "display": "Number of deaths"
+                                }
+                            ]
+                        },
+                        "valueQuantity": {
+                            "value": 12,
+                            "unit": "count",
+                            "system": "http://unitsofmeasure.org",
+                            "code": "count"
+                        }
+                    }
+                ]
+            }
         },
-        "effectiveDateTime": "14/12/2020",
-        "valueQuantity": {
-            "value": 788,
-            "unit": "count",
-            "system": "http://unitsofmeasure.org",
-            "code": "count"
+        {
+            "fullUrl": "urn:uuid:observation-12/12/2020",
+            "resource": {
+                "resourceType": "Observation",
+                "id": "observation-12/12/2020",
+                "status": "final",
+                "code": {
+                    "coding": [
+                        {
+                            "system": "http://loinc.org",
+                            "code": "94500-6",
+                            "display": "COVID-19 case report"
+                        }
+                    ]
+                },
+                "subject": {
+                    "reference": "Country/ALB"
+                },
+                "effectiveDateTime": "12/12/2020",
+                "component": [
+                    {
+                        "code": {
+                            "coding": [
+                                {
+                                    "system": "http://loinc.org",
+                                    "code": "94531-1",
+                                    "display": "Number of COVID-19 cases"
+                                }
+                            ]
+                        },
+                        "valueQuantity": {
+                            "value": 802,
+                            "unit": "count",
+                            "system": "http://unitsofmeasure.org",
+                            "code": "count"
+                        }
+                    },
+                    {
+                        "code": {
+                            "coding": [
+                                {
+                                    "system": "http://loinc.org",
+                                    "code": "9279-1",
+                                    "display": "Number of deaths"
+                                }
+                            ]
+                        },
+                        "valueQuantity": {
+                            "value": 12,
+                            "unit": "count",
+                            "system": "http://unitsofmeasure.org",
+                            "code": "count"
+                        }
+                    }
+                ]
+            }
         }
-    },
-    {
-        "resourceType": "Observation",
-        "id": "observation-13/12/2020",
-        "status": "final",
-        "code": {
-            "coding": [
-                {
-                    "system": "http://loinc.org",
-                    "code": "94531-1",
-                    "display": "COVID-19 cases reported"
-                }
-            ]
-        },
-        "subject": {
-            "reference": "Country/Albania"
-        },
-        "effectiveDateTime": "13/12/2020",
-        "valueQuantity": {
-            "value": 879,
-            "unit": "count",
-            "system": "http://unitsofmeasure.org",
-            "code": "count"
-        }
-    },
-    {
-        "resourceType": "Observation",
-        "id": "observation-12/12/2020",
-        "status": "final",
-        "code": {
-            "coding": [
-                {
-                    "system": "http://loinc.org",
-                    "code": "94531-1",
-                    "display": "COVID-19 cases reported"
-                }
-            ]
-        },
-        "subject": {
-            "reference": "Country/Albania"
-        },
-        "effectiveDateTime": "12/12/2020",
-        "valueQuantity": {
-            "value": 802,
-            "unit": "count",
-            "system": "http://unitsofmeasure.org",
-            "code": "count"
-        }
-    }
-]
+    ]
+}

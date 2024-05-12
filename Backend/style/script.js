@@ -1,23 +1,17 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     const margin = { top: 270, right: 30, bottom: 70, left: 100 };
     const width = 1000 - margin.left - margin.right;
     const height = 800 - margin.top - margin.bottom;
     const parseDate = d3.timeParse("%d/%m/%Y");
     const formatDate = d3.timeFormat("%d.%m.%Y");
     const year = 2020;
+    let uploadedData = [];
+    let circlesVisible = true;
+    let timer, playing = false;
+    const europeanCountries = new Set();
+    let fhirCountry = "";
 
-    const europeanCountries = ['Albania', 'Andorra', 'Armenia', 'Austria', 'Azerbaijan', 'Belarus', 'Belgium', 'Bosnia_and_Herzegovina', 'Bulgaria', 'Croatia', 'Cyprus', 'Czechia',
-        'Denmark', 'Estonia', 'Faroe_Islands', 'Finland', 'France', 'Georgia', 'Germany', 'Gibraltar', 'Greece', 'Guernsey', 'Holy_See', 'Hungary',
-        'Iceland', 'Ireland', 'Isle_of_Man', 'Italy', 'Jersey', 'Kosovo', 'Latvia', 'Liechtenstein', 'Lithuania', 'Luxembourg', 'Malta', 'Moldova',
-        'Monaco', 'Montenegro', 'Netherlands', 'North_Macedonia', 'Norway', 'Poland', 'Portugal', 'Romania', 'Russia', 'San_Marino', 'Serbia', 'Slovakia', 'Slovenia', 'Spain', 'Sweden', 'Switzerland', 'Turkey', 'Ukraine', 'United_Kingdom'];
-
-    const selector = d3.select("#country-selector");
-    selector.selectAll("option")
-        .data(europeanCountries)
-        .enter().append("option")
-        .attr("value", d => d)
-        .text(d => d.replace(/_/g, ' '));
-
+    // Create selectors and containers
     const monthSelector = d3.select("#month-selector");
     const svgContainer = d3.select("#chart-container");
     const svg = svgContainer.append("svg")
@@ -34,36 +28,28 @@ document.addEventListener("DOMContentLoaded", function() {
         .style("border", "1px solid #ccc")
         .style("padding", "5px");
 
-    const messageContainer = d3.select("#message-container");
-    const focusLink = document.getElementById("focus-link");
+    const fileUploadForm = document.getElementById("file-upload-form");
+    const visualizeButton = document.getElementById("visualize-btn");
+    const removeButton = document.getElementById("remove-btn");
+    const fileInput = document.getElementById("file-upload");
+    const selector = d3.select("#country-selector");
 
-    let circlesVisible = true;
-    let timer, playing = false;
 
-    const toggleButton = d3.select("#toggle-btn");
-    toggleButton.on("click", function() {
-        circlesVisible = !circlesVisible;
-        svg.selectAll("circle").style("display", circlesVisible ? null : "none");
-        this.textContent = circlesVisible ? "Hide Data Points" : "Show Data Points";
-    });
-
-    const downloadButton = document.getElementById("download-btn");
-    downloadButton.addEventListener("click", function() {
-        const fileUrl = "/fhir_bundle.json";
-        const downloadLink = document.createElement("a");
-        downloadLink.href = fileUrl;
-        downloadLink.download = "fhir_bundle.json";
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
-    });
-
-    d3.json("filtered_european_data.json").then(function(data) {
+    // Fetch initial European data and populate the dropdown
+    d3.json("filtered_european_data.json").then(function (data) {
         data.forEach(d => {
             d.date = parseDate(d.dateRep);
             d.cases = +d.cases;
             d.deaths = +d.deaths;
+            europeanCountries.add(d.countriesAndTerritories);
         });
+
+        const uniqueCountries = Array.from(europeanCountries).sort();
+        selector.selectAll("option")
+            .data(uniqueCountries)
+            .enter().append("option")
+            .attr("value", d => d)
+            .text(d => d.replace(/_/g, ' '));
 
         const dates = data.map(d => d.date);
         const uniqueDates = [...new Set(dates)].sort(d3.ascending);
@@ -131,7 +117,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 .attr("r", 5)
                 .attr("fill", "red")
                 .style("display", circlesVisible ? null : "none")
-                .on("mouseover", function(event, d) {
+                .on("mouseover", function (event, d) {
                     tooltip.transition()
                         .duration(200)
                         .style("opacity", .9);
@@ -139,7 +125,7 @@ document.addEventListener("DOMContentLoaded", function() {
                         .style("left", (event.pageX) + "px")
                         .style("top", (event.pageY - 28) + "px");
                 })
-                .on("mouseout", function() {
+                .on("mouseout", function () {
                     tooltip.transition()
                         .duration(500)
                         .style("opacity", 0);
@@ -168,25 +154,16 @@ document.addEventListener("DOMContentLoaded", function() {
 
         function updateUIBasedOnSelection(value) {
             const month = monthSelector.node().value;
-            if (value) {
-                if (month === "None") {
-                    sliderSvg.style("display", "block");
-                    playButton.style("display", "block");
-                } else {
-                    sliderSvg.style("display", "none");
-                    playButton.style("display", "none");
-                }
-                messageContainer.style("visibility", "hidden");
-                svgContainer.style("display", "block");
-                updateChart(value, month === "None" ? slider.value() : null);
+            if (value && month === "None") {
+                showSliderWithPlayPauseControls(true);
+                updateChart(value, slider.value());
             } else {
-                sliderSvg.style("display", "none");
-                playButton.style("display", "none");
-                messageContainer.style("visibility", "visible");
-                svgContainer.style("display", "none");
+                showSliderWithPlayPauseControls(false);
+                updateChart(value);
             }
         }
 
+        // Create slider and play/pause button
         const sliderSvg = d3.select('#slider-range').append('svg')
             .attr('width', 920)
             .attr('height', 100)
@@ -209,61 +186,204 @@ document.addEventListener("DOMContentLoaded", function() {
 
         sliderG.call(slider);
 
-        const playButton = sliderSvg.append('foreignObject')
-            .attr('x', 860)
-            .attr('y', 20)
-            .attr('width', 120)
-            .attr('height', 50)
+        const playPauseButton = sliderSvg.append("foreignObject")
+            .attr("x", 860)
+            .attr("y", 20)
+            .attr("width", 120)
+            .attr("height", 50)
             .append("xhtml:button")
-            .attr('class', 'play-pause-btn')
-            .text('Play')
-            .style("display", "block")
+            .attr("class", "play-pause-btn")
+            .text("Play")
             .style("background-color", "#32CD32")
-            .on('click', function() {
-                if (!playing) {
-                    timer = setInterval(function() {
-                        let date = slider.value();
-                        const nextDate = new Date(date.getTime() + (1000 * 60 * 60 * 24));
-                        if (nextDate > d3.max(uniqueDates)) {
-                            clearInterval(timer);
+            .on("click", function () {
+                playing = !playing;
+                if (playing) {
+                    this.textContent = "Pause";
+                    this.style.backgroundColor = "#EE4B2B";
+                    timer = d3.interval(function () {
+                        let nextValue = new Date(slider.value());
+                        nextValue.setDate(nextValue.getDate() + 1);
+                        if (nextValue > slider.max()) {
                             playing = false;
-                            playButton.textContent = 'Play';
-                            playButton.style.backgroundColor = '#32CD32';
+                            playPauseButton.text("Play");
+                            playPauseButton.style("background-color", "#32CD32");
+                            timer.stop();
                         } else {
-                            slider.value(nextDate);
-                            updateChart(selector.node().value, nextDate);
+                            slider.value(nextValue);
                         }
-                    }, 100);
-                    playing = true;
-                    this.textContent = 'Pause';
-                    this.style.backgroundColor = '#EE4B2B';
+                    }, 100); // Faster interval
                 } else {
-                    clearInterval(timer);
-                    playing = false;
-                    this.textContent = 'Play';
-                    this.style.backgroundColor = '#32CD32';
+                    this.textContent = "Play";
+                    this.style.backgroundColor = "#32CD32";
+                    timer.stop();
                 }
             });
 
-        selector.on("change", function() {
+        function showSliderWithPlayPauseControls(show) {
+            sliderSvg.style("display", show ? null : "none");  // Adjusts display based on the show parameter
+}
+
+        selector.on("change", function () {
             updateUIBasedOnSelection(this.value);
         });
 
-        monthSelector.on("change", function() {
+        monthSelector.on("change", function () {
             updateUIBasedOnSelection(selector.node().value);
         });
+    });
 
-        focusLink.addEventListener("click", function(event) {
-            event.preventDefault();
-            messageContainer.style("visibility", "hidden");
-            svgContainer.style("display", "none");
-            const dropdown = document.getElementById("country-selector");
-            if (dropdown) {
-                dropdown.focus();
-            }
-            return false;
+    // Handle FHIR data and months dynamically
+    function transformFHIRToStandard(fhirData) {
+        return fhirData.map(obs => ({
+            dateRep: obs.effectiveDateTime,
+            cases: obs.valueQuantity.value,
+            countriesAndTerritories: obs.subject.reference.split("/")[1],
+        }));
+    }
+
+    function clearChartAndFileInput() {
+        uploadedData = [];
+        svg.selectAll("*").remove();
+        fileUploadForm.reset();
+        selector.attr("disabled", null);
+        monthSelector.attr("disabled", null).property("selectedIndex", 0);  // Reset month selector
+        fhirCountry = "";
+        showSliderWithPlayPauseControls(false);
+    }
+
+    removeButton.addEventListener("click", function (event) {
+        event.preventDefault();
+        clearChartAndFileInput();
+    });
+
+    function updateFHIRChart(data, title) {
+        const x = d3.scaleTime()
+            .range([0, width])
+            .domain(d3.extent(data, d => parseDate(d.dateRep)));
+        const y = d3.scaleLinear()
+            .range([height, 0])
+            .domain([0, d3.max(data, d => d.cases)]);
+
+        svg.selectAll("*").remove();
+
+        svg.append("g")
+            .attr("transform", `translate(0,${height})`)
+            .call(d3.axisBottom(x)
+                .tickFormat(formatDate)
+                .ticks(d3.timeDay.every(1)))
+            .selectAll("text")
+            .attr("transform", "rotate(-45)")
+            .style("text-anchor", "end");
+
+        svg.append("g").call(d3.axisLeft(y));
+
+        const line = d3.line()
+            .x(d => x(parseDate(d.dateRep)))
+            .y(d => y(d.cases));
+
+        svg.append("path")
+            .datum(data)
+            .attr("fill", "none")
+            .attr("stroke", "steelblue")
+            .attr("stroke-width", 2)
+            .attr("d", line);
+
+        svg.selectAll("circle")
+            .data(data)
+            .enter()
+            .append("circle")
+            .attr("cx", d => x(parseDate(d.dateRep)))
+            .attr("cy", d => y(d.cases))
+            .attr("r", 5)
+            .attr("fill", "red")
+            .style("display", circlesVisible ? null : "none")
+            .on("mouseover", (event, d) => {
+                tooltip.transition()
+                    .duration(200)
+                    .style("opacity", 0.9);
+                    tooltip.html(`Date: ${formatDate(parseDate(d.dateRep))}<br>Cases: ${d.cases}<br>Deaths: ${d.deaths}`)
+                    .style("left", `${event.pageX}px`)
+                    .style("top", `${event.pageY - 28}px`);
+            })
+            .on("mouseout", () => {
+                tooltip.transition().duration(500).style("opacity", 0);
+            });
+
+        svg.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 0 - (margin.left - 20))
+            .attr("x", 0 - (height / 2))
+            .attr("dy", "1em")
+            .style("text-anchor", "middle")
+            .style("font-size", "14px")
+            .style("fill", "#777")
+            .style("font-family", "sans-serif")
+            .text("Total Number of Covid cases");
+
+        svg.append("text")
+            .attr("class", "chart-title")
+            .attr("x", margin.left - 50)
+            .attr("y", margin.top - 420)
+            .style("font-size", "24px")
+            .style("font-weight", "bold")
+            .style("font-family", "sans-serif")
+            .text(`${title} in 2020`);
+    }
+
+    // Visualize the uploaded FHIR data
+    visualizeButton.addEventListener("click", function (event) {
+        event.preventDefault();
+        if (!fileInput.files[0]) {
+            alert("Please upload a file before visualizing.");
+        } else {
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+            reader.onload = function () {
+                let data;
+                try {
+                    data = JSON.parse(reader.result);
+                } catch (error) {
+                    console.error("Parsing Error:", error);
+                    alert("Error parsing the uploaded file. Please ensure it's a valid JSON file.");
+                    return;
+                }
+
+                if (Array.isArray(data) && data[0]?.resourceType === "Observation") {
+                    uploadedData = transformFHIRToStandard(data);
+
+                    if (uploadedData.length > 0) {
+                        fhirCountry = uploadedData[0].countriesAndTerritories.replace(/_/g, ' ');
+                        const title = `Total Number of Covid cases in ${fhirCountry} in 2020`;
+                        updateFHIRChart(uploadedData, title);
+                    } else {
+                        alert("No data available for visualization.");
+                    }
+                } else {
+                    uploadedData = data;
+                }
+            };
+            reader.readAsText(file);
+        };
         });
 
-        updateUIBasedOnSelection(selector.property('value'));
+    const toggleButton = d3.select("#toggle-btn");
+    toggleButton.on("click", function () {
+        circlesVisible = !circlesVisible;
+        svg.selectAll("circle").style("display", circlesVisible ? null : "none");
+        this.textContent = circlesVisible ? "Hide Data Points" : "Show Data Points";
+    });
+
+    const downloadButton = document.getElementById("download-btn");
+downloadButton.addEventListener("click", function () {
+    const fileUrls = ["/fhir_bundle.json", "/fhir_sample.json"];
+
+    fileUrls.forEach(function (fileUrl) {
+        const downloadLink = document.createElement("a");
+        downloadLink.href = fileUrl;
+        downloadLink.download = fileUrl.split('/').pop(); // Extracting filename from URL
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+        });
     });
 });
