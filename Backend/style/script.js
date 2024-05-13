@@ -243,7 +243,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         } else {
                             slider.value(nextValue);
                         }
-                    }, 100); // Faster interval
+                    }, 100); 
                 } else {
                     this.textContent = "Play";
                     this.style.backgroundColor = "#32CD32";
@@ -265,13 +265,30 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // Handle FHIR data and months dynamically
-        function transformFHIRToStandard(fhirData) {
-            return fhirData.map(obs => ({
-                dateRep: obs.effectiveDateTime,
-                cases: obs.valueQuantity.value,
-                countriesAndTerritories: obs.subject.reference.split("/")[1],
-        }));
+    // Handle FHIR data 
+    function transformFHIRToStandard(fhirData) {
+        return fhirData.map(entry => {
+            const observation = entry.resource;
+            let cases = 0;
+            let deaths = 0;
+    
+            // Loop through each component to find cases and deaths
+            observation.component.forEach(component => {
+                const code = component.code.coding[0].code; // Assume the relevant code is always the first in the coding array
+                if (code === "94531-1") {
+                    cases = component.valueQuantity.value; // Extract cases
+                } else if (code === "9279-1") {
+                    deaths = component.valueQuantity.value; // Extract deaths
+                }
+            });
+    
+            return {
+                dateRep: observation.effectiveDateTime,
+                cases: cases,
+                deaths: deaths,
+                countriesAndTerritories: observation.subject.reference.split("/")[1].replace('Country/', '')
+            };
+        });    
     }
 
     function clearChartAndFileInput() {
@@ -370,36 +387,38 @@ document.addEventListener("DOMContentLoaded", function () {
         event.preventDefault();
         if (!fileInput.files[0]) {
             alert("Please upload a file before visualizing.");
-        } else {
-            const file = fileInput.files[0];
-            const reader = new FileReader();
-            reader.onload = function () {
-                let data;
-                try {
-                    data = JSON.parse(reader.result);
-                } catch (error) {
-                    console.error("Parsing Error:", error);
-                    alert("Error parsing the uploaded file. Please ensure it's a valid JSON file.");
-                    return;
-                }
-
-                if (Array.isArray(data) && data[0]?.resourceType === "Observation") {
-                    uploadedData = transformFHIRToStandard(data);
-
-                    if (uploadedData.length > 0) {
-                        fhirCountry = uploadedData[0].countriesAndTerritories.replace(/_/g, ' ');
-                        const title = `Total Number of Covid cases in ${fhirCountry} in 2020`;
-                        updateFHIRChart(uploadedData, title);
-                    } else {
-                        alert("No data available for visualization.");
-                    }
+            return; // Ensure to exit the function if no file is selected
+        }
+    
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+        reader.onload = function () {
+            let data;
+            try {
+                data = JSON.parse(reader.result);
+            } catch (error) {
+                console.error("Parsing Error:", error);
+                alert("Error parsing the uploaded file. Please ensure it's a valid JSON file.");
+                return;
+            }
+    
+            // Correcting the condition to match the structure of the FHIR JSON
+            if (data.resourceType === "Bundle" && data.type === "collection" && data.entry) {
+                const uploadedData = transformFHIRToStandard(data.entry);
+    
+                if (uploadedData.length > 0) {
+                    const fhirCountry = uploadedData[0].countriesAndTerritories;
+                    const title = `Total Number of Covid cases in ${fhirCountry} in 2020`;
+                    updateFHIRChart(uploadedData, title);
                 } else {
-                    uploadedData = data;
+                    alert("No data available for visualization.");
                 }
-            };
-            reader.readAsText(file);
+            } else {
+                alert("The uploaded file does not contain the expected FHIR Bundle data.");
+            }
         };
-        });
+        reader.readAsText(file);
+    });    
 
     const toggleButton = d3.select("#toggle-btn");
     toggleButton.on("click", function () {
