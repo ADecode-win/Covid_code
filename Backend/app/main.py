@@ -43,7 +43,7 @@ processed_data = []
 
 @app.post("/api/data")
 async def receive_data(data: List[COVIDData]):
-    valid_data = [d.dict() for d in data]
+    valid_data = [d.model_dump() for d in data]  
     processed_data.extend(valid_data)
     with open("style/processed_data.json", "w") as f:
         json.dump(processed_data, f, indent=4)
@@ -56,7 +56,14 @@ async def get_data():
             stored_data = json.load(f)
         return JSONResponse(content={"status": "success", "data": stored_data})
     except FileNotFoundError:
-        return JSONResponse(status_code=404, content={"status": "error", "message": "Data not found"})
+        raise HTTPException(status_code=404, detail="Data not found")
+
+
+@app.get("/api/example")
+async def example_endpoint(request: Request):
+    # Access request headers
+    headers = request.headers
+    return JSONResponse(content={"headers": dict(headers)})
 
 @app.get("/")
 async def main():
@@ -70,9 +77,13 @@ async def get_filtered_european_data():
 async def get_script_js():
     return FileResponse("style/script.js")
 
-@app.get("/fhir_bundle.json")  # New route for the specific file
+@app.get("/fhir_bundle.json") 
 async def get_fhir_bundle():
     return FileResponse("style/fhir_bundle.json")
+
+@app.get("/fhir_sample.json")  
+async def get_fhir_sample():
+    return FileResponse("style/fhir_sample.json")
 
 @app.get("/style/{filename:path}")
 async def get_static(filename: str):

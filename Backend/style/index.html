@@ -14,6 +14,7 @@
             overflow-y: auto;
             background-color: #c8c4c4;
         }
+
         #header-container {
             background-color: #007BFF;
             color: white;
@@ -23,15 +24,12 @@
             font-weight: bold;
             font-family: Arial, sans-serif;
         }
-        #chart-container {
-            width: 100%;
+
+        #chart-container, svg {
             display: block;
             margin: 0 auto;
         }
-        svg {
-            display: block;
-            margin: 0 auto;
-        }
+
         .tooltip {
             position: absolute;
             padding: 10px;
@@ -42,36 +40,76 @@
             opacity: 0;
             transition: opacity 0.3s;
         }
+
         button {
             margin-left: 10px;
         }
+
+        #toggle-btn, #download-btn, #visualize-btn, #remove-btn {
+            cursor: pointer;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            color: black;
+        }
+
         #toggle-btn {
             position: absolute;
             top: 10px;
             right: 10px;
-            padding: 5px 10px;
-            cursor: pointer;
             background-color: #32CD32;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            color: black;
         }
+
         #download-btn {
             position: absolute;
             top: 10px;
             right: 180px;
-            padding: 5px 30px;
-            cursor: pointer;
             background-color: #32CD32;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            color: black;
         }
+
+        #visualize-btn {
+            background-color: #007BFF;
+        }
+
+        #remove-btn {
+            background-color: #EE4B2B;
+        }
+
+        #upload-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+
+        #form-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 10vh; /* Adjust as necessary to control vertical placement */
+        }
+
         #slider-range {
             display: flex;
             justify-content: center;
         }
-        #message-container {
+
+        #drag-drop-area {
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            width: 300px;  /* Adjust the size as needed */
+        }
+
+        #file-name-display {
+            margin-top: 10px;
+        }
+        /* #message-container {
             display: flex;
             align-items: center;
             justify-content: center;
@@ -85,18 +123,28 @@
             background-color: rgba(255, 255, 255, 0.8);
             z-index: 10;
             visibility: hidden;
-        }
+        }*/
     </style>
 </head>
 <body>
     <div id="header-container">
         COVID-19 CASES IN EUROPEAN COUNTRIES
     </div>
-    <div id="message-container" class="message-container">
-        Please select the desired country <a href="#" id="focus-link" style="color: blue; text-decoration: underline; cursor: pointer;">Here</a> to see the number of COVID-19 cases.
+
+    <div id="form-wrapper">
+        <form id="file-upload-form">
+            <div id="upload-container">
+                <div id="drag-drop-area" style="border: 2px dashed #ccc; padding: 20px; text-align: center;">
+                    Drag and drop your JSON file here.
+                    <input type="file" id="file-upload" accept=".json" style="display: none;">
+                </div>
+                <div id="file-name-display"></div>
+            <button id="visualize-btn" type="button">Visualize</button>
+            <button id="remove-btn" type="button">Remove</button>
+        </form>
     </div>
-    
-    <div class="tooltip"></div>
+</div>
+
     <select id="country-selector">
         <option value="">Select a country</option>
     </select>
@@ -120,7 +168,7 @@
     <div id="chart-container"></div>
     <div id="slider-range"></div>
     <button id="toggle-btn">Toggle Data Points</button>
-    <button id="download-btn">Download FHIR</button>
+    <button id="download-btn">Download FHIR files</button>
 
     <!-- Include the D3.js library -->
     <script src="https://d3js.org/d3.v7.min.js"></script>
