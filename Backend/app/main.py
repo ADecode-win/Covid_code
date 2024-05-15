@@ -1,11 +1,17 @@
-from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi import FastAPI, Request, BackgroundTasks
+from fastapi.responses import JSONResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, field_validator
-from typing import List, Optional
 import os
+import logging
+import pandas as pd
 import json
+from io import StringIO
+from typing import Any
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
@@ -19,55 +25,101 @@ app.add_middleware(
 
 app.mount("/style", StaticFiles(directory="./style"), name="style")
 
-class COVIDData(BaseModel):
-    dateRep: str
-    day: str
-    month: str
-    year: str
-    cases: int
-    deaths: int
-    countriesAndTerritories: str
-    geoId: str
-    countryterritoryCode: str
-    popData2019: Optional[float]
-    continentExp: str
-    cumulative_number_for_14_days_of_COVID_19_cases_per_100000: Optional[str]
+async def startup_event_handler():
+    file_path = 'style/sample.json'
+    output_path = 'style/fhir_sample.json'
+    with open(file_path, 'r') as file:
+        json_data = file.read()
+    await create_fhir_bundle_from_json(json_data, output_path)
+    logger.info("FHIR bundle created and loaded at startup.")
 
-    @field_validator('dateRep', 'countriesAndTerritories', 'geoId', 'continentExp')
-    def must_not_be_empty(cls, v):
-        if not v:
-            raise ValueError('Must not be empty')
-        return v
+async def shutdown_event_handler():
+    logger.info("Application is shutting down.")
 
-processed_data = []
+app.add_event_handler("startup", startup_event_handler)
+app.add_event_handler("shutdown", shutdown_event_handler)
 
-@app.post("/api/data")
-async def receive_data(data: List[COVIDData]):
-    valid_data = [d.model_dump() for d in data]  
-    processed_data.extend(valid_data)
-    with open("style/processed_data.json", "w") as f:
-        json.dump(processed_data, f, indent=4)
-    return JSONResponse(content={"status": "success", "processed_data": valid_data})
-
-@app.get("/api/data")
-async def get_data():
+async def create_fhir_bundle_from_json(json_data: str, output_file: str):
+    logger.info("JSON data to be parsed: %s", json_data)
+    
     try:
-        with open("style/processed_data.json", "r") as f:
-            stored_data = json.load(f)
-        return JSONResponse(content={"status": "success", "data": stored_data})
-    except FileNotFoundError:
-        raise HTTPException(status_code=404, detail="Data not found")
+        data = pd.read_json(StringIO(json_data))
+    except ValueError as e:
+        logger.error("Error parsing JSON: %s", e)
+        return None
 
+    fhir_bundle = {
+        "resourceType": "Bundle",
+        "type": "collection",
+        "entry": [
+            {
+                "fullUrl": f"urn:uuid:observation-{row['dateRep']}",
+                "resource": create_observation(row)
+            } for index, row in data.iterrows()
+        ]
+    }
 
-@app.get("/api/example")
-async def example_endpoint(request: Request):
-    # Access request headers
-    headers = request.headers
-    return JSONResponse(content={"headers": dict(headers)})
+    with open(output_file, 'w') as f:
+        json.dump(fhir_bundle, f, indent=4)
+    logger.info(f"FHIR bundle created and saved to {output_file}")
+    return fhir_bundle
+
+def create_observation(record: pd.Series) -> dict:
+    """Creates a FHIR Observation for a single record."""
+    return {
+        "resourceType": "Observation",
+        "id": f"observation-{record['dateRep']}",
+        "status": "final",
+        "code": {
+            "coding": [
+                {"system": "http://loinc.org", "code": "94500-6", "display": "COVID-19 case report"}
+            ]
+        },
+        "subject": {
+            "reference": f"Country/{record['countriesAndTerritories']}"
+        },
+        "effectiveDateTime": record['dateRep'],
+        "component": [
+            {
+                "code": {
+                    "coding": [
+                        {"system": "http://loinc.org", "code": "94531-1", "display": "Number of COVID-19 cases"}
+                    ]
+                },
+                "valueQuantity": {
+                    "value": record['cases'],
+                    "unit": "count",
+                    "system": "http://unitsofmeasure.org",
+                    "code": "count"
+                }
+            },
+            {
+                "code": {
+                    "coding": [
+                        {"system": "http://loinc.org", "code": "9279-1", "display": "Number of deaths"}
+                    ]
+                },
+                "valueQuantity": {
+                    "value": record['deaths'],
+                    "unit": "count",
+                    "system": "http://unitsofmeasure.org",
+                    "code": "count"
+                }
+            }
+        ]
+    }
+
+@app.post('/api/data')
+async def handle_post_request(background_tasks: BackgroundTasks, request: Request):
+    data = await request.json()
+    logger.info("POST request received with data: %s", data)
+    background_tasks.add_task(create_fhir_bundle_from_json, json.dumps(data), 'style/fhir_sample.json')
+    return JSONResponse(content={"status": "success", "data_received": data})
 
 @app.get("/")
 async def main():
     return FileResponse("style/index.html")
+
 
 @app.get("/filtered_european_data.json")
 async def get_filtered_european_data():
@@ -84,10 +136,6 @@ async def get_fhir_bundle():
 @app.get("/fhir_sample.json")  
 async def get_fhir_sample():
     return FileResponse("style/fhir_sample.json")
-
-@app.get("/style/{filename:path}")
-async def get_static(filename: str):
-    return FileResponse(os.path.join("style", filename))
 
 if __name__ == "__main__":
     import uvicorn
