@@ -45,13 +45,20 @@
             margin-left: 10px;
         }
 
-        #toggle-btn, #download-btn, #visualize-btn, #remove-btn {
+        #toggle-btn, #visualize-btn, #remove-btn, #download-fhir-bundle-btn, #download-fhir-sample-btn {
             cursor: pointer;
             padding: 5px 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
             color: black;
         }
+        /*#toggle-btn, #download-btn, #visualize-btn, #remove-btn {
+            cursor: pointer;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            color: black;
+        }*/
 
         #toggle-btn {
             position: absolute;
@@ -59,13 +66,21 @@
             right: 10px;
             background-color: #32CD32;
         }
-
-        #download-btn {
+        
+        #download-fhir-bundle-btn {
             position: absolute;
             top: 10px;
-            right: 180px;
+            right: 180px; /* Previously where download-btn was */
             background-color: #32CD32;
         }
+        
+        #download-fhir-sample-btn {
+            position: absolute;
+            top: 10px;
+            right: 380px;
+            background-color: #32CD32;
+        } /* Slightly to the left of the bundle button */
+
 
         #visualize-btn {
             background-color: #007BFF;
@@ -168,7 +183,8 @@
     <div id="chart-container"></div>
     <div id="slider-range"></div>
     <button id="toggle-btn">Toggle Data Points</button>
-    <button id="download-btn">Download FHIR files</button>
+    <button id="download-fhir-bundle-btn">Download FHIR Bundle</button>
+    <button id="download-fhir-sample-btn">Download FHIR Sample</button>
 
     <!-- Include the D3.js library -->
     <script src="https://d3js.org/d3.v7.min.js"></script>

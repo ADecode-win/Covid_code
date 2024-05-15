@@ -427,17 +427,33 @@ document.addEventListener("DOMContentLoaded", function () {
         this.textContent = circlesVisible ? "Hide Data Points" : "Show Data Points";
     });
 
-    const downloadButton = document.getElementById("download-btn");
-downloadButton.addEventListener("click", function () {
-    const fileUrls = ["/fhir_bundle.json", "/fhir_sample.json"];
+     // Setup download functionality
+     setupDownloadButtons();
 
-    fileUrls.forEach(function (fileUrl) {
-        const downloadLink = document.createElement("a");
-        downloadLink.href = fileUrl;
-        downloadLink.download = fileUrl.split('/').pop(); // Extracting filename from URL
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
-        });
+     function setupDownloadButtons() {
+         const downloadFhirBundleButton = document.getElementById("download-fhir-bundle-btn");
+         const downloadFhirSampleButton = document.getElementById("download-fhir-sample-btn");
+ 
+         if (!downloadFhirBundleButton || !downloadFhirSampleButton) {
+             console.error("Download buttons not found.");
+             return; // Prevent further execution if buttons are not found
+         }
+ 
+         downloadFhirBundleButton.addEventListener("click", function () {
+             downloadFile("/fhir_bundle.json");
+         });
+ 
+         downloadFhirSampleButton.addEventListener("click", function () {
+             downloadFile("/fhir_sample.json");
+         });
+     }
+ 
+     function downloadFile(fileUrl) {
+         const downloadLink = document.createElement("a");
+         downloadLink.href = fileUrl;
+         downloadLink.download = fileUrl.split('/').pop();
+         document.body.appendChild(downloadLink);
+         downloadLink.click();
+         document.body.removeChild(downloadLink);
+        }
     });
-});
