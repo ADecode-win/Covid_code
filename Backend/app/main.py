@@ -7,6 +7,8 @@ import logging
 import json
 import asyncio
 from typing import Any, Dict, List
+from .file_watcher import start_file_watcher  # Updated import statement
+import threading
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -24,11 +26,17 @@ app.add_middleware(
 
 app.mount("/style", StaticFiles(directory="./style"), name="style")
 
+@app.on_event("startup")
 async def startup_event_handler():
     file_path = 'style/sample.json'
     output_path = 'style/fhir_sample.json'
     await load_and_convert_data(file_path, output_path)
     logger.info("FHIR bundle created and loaded at startup.")
+    
+    # Start file watcher in a separate thread
+    post_url = "http://localhost:8000/api/data"
+    threading.Thread(target=start_file_watcher, args=(file_path, post_url), daemon=True).start()
+    
     # Delay the test POST request until the server is likely to be ready
     asyncio.create_task(delayed_post_request(file_path))
 
