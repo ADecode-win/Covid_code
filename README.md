@@ -39,7 +39,7 @@ This application supports interoperability by accepting a standardised JSON file
 
 ## Key Features
 ### Interactive Time Series Visualization
-- **Graphical Display**: View the total number of COVID-19 cases displayed over-time on a clean and clear graph. Each point on the graph represents a specific date in the dd.mm.yyyy format with the ability to see details about cases and deaths on hover.
+- **Graphical Display**: View the total number of COVID-19 cases displayed over time on a clean and clear graph. Each point on the graph represents a specific date in the dd.mm.yyyy format with the ability to see details about cases and deaths on hover.
 - **Country and Month Selection**: Customize data views by selecting specific countries and months using dropdown menus, or choose "None" to view the data for the entire year without any monthly segmentation.
 - **Data Point Interactivity**: Hover over any red dot on the graph to reveal detailed data for that date, including the number of cases and deaths, enhancing the informational value of the visualization.
 - **Visualize Button**: Enables visualization of the graph when a file is uploaded.
@@ -87,7 +87,7 @@ The application aims to provide comprehensive insights into the COVID-19 pandemi
 - Use the "Select a country" and "Select a month" dropdown menus to filter the data.
 - If “None” is selected from “Select a month” along with any country from the dropdown menus, ensure the graph is initially removed by clicking the remove button before uploading a new file in the drag and drop box.
 2. **Interact with the Graph**:
-- Hover over the data points (red circles) to see detailed information about dates, cases, and deaths of a specific country.
+- Hover over the data points (red circles) to see detailed information about dates, cases, and deaths of a specific country. (**Tip**: For the best experience, pause the slider to view detailed information on the data points.)
 - Use the slider to play through the year’s data dynamically.
 3. **Download FHIR Files**:
 - Click "Download FHIR Bundle" (not to be inserted in the drag and drop box) or "Download FHIR Sample" to get the respective files (both are JSON files).
@@ -95,25 +95,27 @@ The application aims to provide comprehensive insights into the COVID-19 pandemi
 - Drag and drop the JSON file (fhir_sample.json) into the designated box.
 - Click "Visualize" to generate the graph.
 5. **Update Data**:
-- Modify the sample.json file, then re-download the FHIR Sample file (fhir_sample.json)and re-upload it to visualise the updated version.
+- Modify the sample.json file, then re-download the FHIR Sample file (fhir_sample.json)and re-upload it to visualize the updated version.
 
 ## How to use the Application
 
 1. **Create a Codespace**
 
-2. **Clone the Git Repository**:
+2. **Install Docker on Codespace**
+
+3. **Clone the Git Repository**:
    - Run the following command to clone the repository:
      ```sh
      git clone https://github.com/ADecode-win/Covid_code.git
      ```
 
-3. **Navigate to the Directory**:
+4. **Navigate to the Directory**:
    - Change to the directory of the project:
      ```sh
      cd Covid_code/Backend
      ```
 
-4. **Run the Application**:
+5. **Run the Application**:
    - There are two ways to run the application:
 
    **Running with Shell Script**:
@@ -129,7 +131,7 @@ The application aims to provide comprehensive insights into the COVID-19 pandemi
      docker-compose up --build
      ```
 
-5. **Explore the Application**:
+6. **Explore the Application**:
    - Open the application in the web browser to visualize the COVID-19 case data on the time series graph.
 
 
