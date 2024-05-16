@@ -53,9 +53,22 @@ This application supports interoperability by accepting a standardised JSON file
 ## NOTE
 When a country and "None" are selected from the "Select a country" and "Select a month" drop-down boxes respectively, ensure the graph is initially removed by clicking the remove button before uploading the file for visualization.
 
-## IMAGES OF THE APPLICATION
+## Images of the Application
+<img width="1440" alt="image_0" src="https://github.com/ADecode-win/Covid_code/assets/80182151/a884e752-ce0e-42f6-90ad-38f4000e0edb">
+<img width="1440" alt="image_00" src="https://github.com/ADecode-win/Covid_code/assets/80182151/aaf296ad-d17c-4a5b-a309-d2b9293cb5ad">
+<img width="1440" alt="image_1" src="https://github.com/ADecode-win/Covid_code/assets/80182151/ac4baa80-63e5-45dd-a36c-f3fe935bdcf6">
+<img width="1440" alt="image_2" src="https://github.com/ADecode-win/Covid_code/assets/80182151/702fe89f-8087-4826-a97b-5f79d5bc0044">
+<img width="1440" alt="image_3" src="https://github.com/ADecode-win/Covid_code/assets/80182151/1f66fdcf-0dd6-4214-8391-8d3270343bcb">
+<img width="1440" alt="image_4" src="https://github.com/ADecode-win/Covid_code/assets/80182151/f176703c-15a8-4a72-a0e2-8bc93d6e783c">
+<img width="1440" alt="image_5" src="https://github.com/ADecode-win/Covid_code/assets/80182151/e7280230-fab3-4a93-86c0-4d7a98348e2d">
+<img width="1440" alt="image_6" src="https://github.com/ADecode-win/Covid_code/assets/80182151/54284683-5b8c-4591-bcbd-101fb8533f65">
+<img width="1440" alt="image_7" src="https://github.com/ADecode-win/Covid_code/assets/80182151/25b94821-8343-49ab-9eae-f45447008d96">
 
-## VIDEO OF THE APPLICATION
+
+
+## Video of the Application
+https://github.com/ADecode-win/Covid_code/assets/80182151/3db5e135-9413-4c05-a600-69e49d400b70
+
 
 
 ## Purpose
