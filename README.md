@@ -33,6 +33,9 @@ This application supports interoperability by accepting a standardised JSON file
 - Users can download the updated “fhir_sample.json” by clicking the "Download FHIR Sample" button.
 ### Visualizing Updated Data:
 - The updated FHIR sample can be visualized by dragging and dropping it into the app's designated box and clicking "Visualize" to see the updated data.
+### Retrieving Files with GET Function:
+- The application provides a GET function to retrieve the necessary HTML (index.html), script file (script.js), FHIR files (fhir_bundle.json and fhir_sample.json), Filtered European data file (filtered_european_data.json) from the style directory.
+- These files are essential for rendering the user interface and executing the visualization scripts, ensuring the application functions correctly.
 
 ## Key Features
 ### Interactive Time Series Visualization
@@ -79,7 +82,22 @@ The application aims to provide comprehensive insights into the COVID-19 pandemi
 - To provide an interactive and user-friendly platform for data analysis.
 - To support health professionals, researchers, educators, policymakers, and the general public in understanding pandemic trends.
 
-### How to use the application
+## Navigation Guide
+1. **Filter Data**:
+- Use the "Select a country" and "Select a month" dropdown menus to filter the data.
+- If “None” is selected from “Select a month” along with any country from the dropdown menus, ensure the graph is initially removed by clicking the remove button before uploading a new file in the drag and drop box.
+2. **Interact with the Graph**:
+- Hover over the data points (red circles) to see detailed information about dates, cases, and deaths of a specific country.
+- Use the slider to play through the year’s data dynamically.
+3. **Download FHIR Files**:
+- Click "Download FHIR Bundle" (not to be inserted in the drag and drop box) or "Download FHIR Sample" to get the respective files (both are JSON files).
+4. **Upload Data**:
+- Drag and drop the JSON file (fhir_sample.json) into the designated box.
+- Click "Visualize" to generate the graph.
+5. **Update Data**:
+- Modify the sample.json file, then re-download the FHIR Sample file (fhir_sample.json)and re-upload it to visualise the updated version.
+
+## How to use the Application
 
 1. **Create a Codespace**
 
