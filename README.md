@@ -61,6 +61,11 @@ When a country and "None" are selected from the "Select a country" and "Select a
 ## Purpose
 The application aims to provide comprehensive insights into the COVID-19 pandemic's impact across Europe for the year 2020, aiding in the understanding and analysis of the virus's spread. It serves as an invaluable resource for data-driven decision-making.
 
+## Objectives
+- To visualize COVID-19 case data for European countries throughout 2020.
+- To provide an interactive and user-friendly platform for data analysis.
+- To support health professionals, researchers, educators, policymakers, and the general public in understanding pandemic trends.
+
 ## How to use the application
 1.	Create a codespace
 2.	Clone the Git repository by running the following command– 
