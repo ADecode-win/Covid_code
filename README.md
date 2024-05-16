@@ -23,16 +23,16 @@ To ensure visualization compatibility with the FHIR format, a sample from the fi
 ## App Interoperability
 This application supports interoperability by accepting a standardised JSON file (sample.json) and converting it into FHIR format (fhir_sample.json) via a POST request. The process is as follows:
 ### JSON to FHIR Conversion:
-    * This JSON file (sample.json)is converted to FHIR format through a POST request, resulting in “fhir_sample.json.” **Note that for visualization, fhir_sample.json should contain data for a specific country only. If the file contains multiple countries, visualization is not possible**
+    - This JSON file (sample.json)is converted to FHIR format through a POST request, resulting in “fhir_sample.json.” **Note that for visualization, fhir_sample.json should contain data for a specific country only. If the file contains multiple countries, visualization is not possible**
 ### Downloading and Visualization:
-    * The FHIR formatted JSON file (fhir_sample.json) can be downloaded within the app.
-    * Users can then drag and drop this file onto the designated box within the app to visualize the data.
+    - The FHIR formatted JSON file (fhir_sample.json) can be downloaded within the app.
+    - Users can then drag and drop this file onto the designated box within the app to visualize the data.
 ### Updating Data:
-    * While the application is running, the data in sample.json can be modified (changing dateRep, cases, deaths, and countriesAndTerritories).
-    * After updating, the modified JSON file is again converted to FHIR format via a POST request, producing an updated “fhir_sample.json.”
-    * Users can download the updated “fhir_sample.json” by clicking the "Download FHIR Sample" button.
+    - While the application is running, the data in sample.json can be modified (changing dateRep, cases, deaths, and countriesAndTerritories).
+    - After updating, the modified JSON file is again converted to FHIR format via a POST request, producing an updated “fhir_sample.json.”
+    - Users can download the updated “fhir_sample.json” by clicking the "Download FHIR Sample" button.
 ### Visualizing Updated Data:
-    * The updated FHIR sample can be visualized by dragging and dropping it into the app's designated box and clicking "Visualize" to see the updated data.
+    - The updated FHIR sample can be visualized by dragging and dropping it into the app's designated box and clicking "Visualize" to see the updated data.
 
 ## Key Features
 ### Interactive Time Series Visualization
@@ -64,16 +64,16 @@ The application aims to provide comprehensive insights into the COVID-19 pandemi
 ## How to use the application
 1.	Create a codespace
 2.	Clone the Git repository by running the following command– 
-**“git clone https://github.com/ADecode-win/Covid_code.git”**
+*git clone https://github.com/ADecode-win/Covid_code.git
 3.	Navigate to the directory of the project using- 
-** “cd Covid_code/Backend”** 
+*cd Covid_code/Backend
 4.	There are two ways of running the application:
 	- Running with  shell script- Make the script executable and then run it:
-** ”chmod +x run_docker.sh
-./run_docker.sh”**
+*chmod +x run_docker.sh
+./run_docker.sh
 
     - And the other one is running with docker compose
-** “docker-compose up --build”**
+*docker-compose up --build
 
 5.	Explore the application by opening it in the web browser to visualize the COVID-19 case data on the time series graph.
 
