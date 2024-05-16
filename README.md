@@ -11,7 +11,7 @@ The repository consists of several key components:
 The time series graph is an invaluable tool for visualizing data collected over time. It provides numerous benefits for analysis and decision-making, such as revealing trends and allowing for the easy identification of upward, downward, or stable patterns.
 
 ### Data Handling
-The data is sourced from the European Centre for Disease Prevention and Control (ECDC) or (https://opendata.ecdc.europa.eu/covid19)and is available in CSV, JSON, or XML formats. The following steps outline the data handling process:
+The data is sourced from the European Centre for Disease Prevention and Control (ECDC) or (https://opendata.ecdc.europa.eu/covid19) and is available in CSV, JSON, or XML formats. The following steps outline the data handling process:
 
 - **Downloading Data**: The "JSON" file was downloaded using a script located at Covid_code/Backend/app/download_json.py, resulting in the Covid_19.json file. This file contains data from countries all over the world.
 - **Preprocessing Data**: To focus on European countries, the Covid_19.json file was preprocessed using a script at Covid_code/Backend/app/preprocess.py, producing the filtered_european_data.json file.
