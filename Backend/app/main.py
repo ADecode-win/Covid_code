@@ -7,7 +7,7 @@ import logging
 import json
 import asyncio
 from typing import Any, Dict, List
-from .file_watcher import start_file_watcher  # Updated import statement
+from .file_watcher import start_file_watcher 
 import threading
 
 # Configure logging
@@ -26,7 +26,6 @@ app.add_middleware(
 
 app.mount("/style", StaticFiles(directory="./style"), name="style")
 
-@app.on_event("startup")
 async def startup_event_handler():
     file_path = 'style/sample.json'
     output_path = 'style/fhir_sample.json'
