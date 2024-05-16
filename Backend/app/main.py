@@ -46,12 +46,13 @@ async def delayed_post_request(file_path: str):
 async def load_and_convert_data(file_path: str, output_file: str):
     try:
         with open(file_path, 'r') as file:
-            json_data = json.load(file)
-        logger.info(f"Loaded JSON data: {json_data}")
-
+            json_data = file.read()
         if not json_data:
             logger.error("No data found in the file.")
             return
+
+        json_data = json.loads(json_data)
+        logger.info(f"Loaded JSON data: {json_data}")
 
         fhir_bundle = create_fhir_bundle_from_json(json_data)
         if fhir_bundle:
@@ -142,9 +143,14 @@ async def send_test_post_request(file_path: str):
     url = "http://localhost:8000/api/data"
     try:
         with open(file_path, 'r') as file:
-            test_data = json.load(file)
+            json_data = file.read()
+        if not json_data:
+            logger.error("No data found in the file.")
+            return
+        
+        json_data = json.loads(json_data)
         async with httpx.AsyncClient() as client:
-            response = await client.post(url, json=test_data)
+            response = await client.post(url, json=json_data)
             if response.status_code == 200:
                 logger.info(f"Test POST request sent successfully, received response: {response.json()}")
             else:

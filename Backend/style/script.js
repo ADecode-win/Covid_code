@@ -427,7 +427,7 @@ document.addEventListener("DOMContentLoaded", function () {
         this.textContent = circlesVisible ? "Hide Data Points" : "Show Data Points";
     });
 
-     // Setup download functionality
+     // Setting up download functionality
      setupDownloadButtons();
 
      function setupDownloadButtons() {
