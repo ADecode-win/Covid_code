@@ -4,7 +4,7 @@
 ## Overview
 This application provides an interactive and user-friendly platform for visualizing COVID-19 case data across European countries throughout the year 2020. Designed with simplicity and ease of use, it offers tools to analyze pandemic trends over time.
 
-The repository consists of several key components:
+The repository consists of static files:
 
 - **index.html**: This file includes the HTML structure and embedded CSS for styling.
 - **script.js**: This script leverages D3.js to visualize COVID-19 trends using a time series graph.
@@ -49,7 +49,7 @@ This application supports interoperability by accepting a standardised JSON file
 - **Hide/Show Data Points**: Toggle to hide or show data points on the graph for a clearer view of trends without individual day interruptions.
 ### FHIR JSON Integration
 - **Drag and Drop Upload**: Supports uploading of FHIR JSON format files through a drag-and-drop interface, tailored for visualizing health data for individual countries. Ensure that each file uploaded contains data for a specific country only and not multiple countries, to maintain the visualization's clarity and accuracy.
-- **Downloadable FHIR Files**: Users can click the "Download FHIR Bundle" and "Download FHIR Sample" button to download the "fhir_bundle.json" and "fhir_sample.json" files respectively. The "fhir_sample.json" can be visualized by uploading it back into the application's drag and drop box. The "fhir_sample.json" file is specifically prepared with data for one country to facilitate easy use and understanding of the data visualization.
+- **Downloadable FHIR Files**: Users can click the "Download FHIR Bundle" and "Download FHIR Sample" button to download the "fhir_bundle.json" and "fhir_sample.json" files respectively. The "fhir_sample.json" can be visualized by uploading it back into the application's drag-and-drop box. The "fhir_sample.json" file is specifically prepared with data for one country to facilitate easy use and understanding of the data visualization.
 ### Design and Usability
 - **User-Friendly Interface**: Features a straightforward design with clearly labeled controls, making it accessible for users of all skill levels.
 - **Utility Across Fields**: While it is particularly useful for health professionals and researchers, the tool's detailed visual analysis capability makes it also suitable for educators, policymakers, and the general public.
