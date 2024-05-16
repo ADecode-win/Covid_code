@@ -66,19 +66,39 @@ The application aims to provide comprehensive insights into the COVID-19 pandemi
 - To provide an interactive and user-friendly platform for data analysis.
 - To support health professionals, researchers, educators, policymakers, and the general public in understanding pandemic trends.
 
-## How to use the application
-1.	Create a codespace
-2.	Clone the Git repository by running the following command– 
-*git clone https://github.com/ADecode-win/Covid_code.git
-3.	Navigate to the directory of the project using- 
-*cd Covid_code/Backend
-4.	There are two ways of running the application:
-	- Running with  shell script- Make the script executable and then run it:
-*chmod +x run_docker.sh
-./run_docker.sh
+### How to use the application
 
-    - And the other one is running with docker compose
-*docker-compose up --build
+1. **Create a Codespace**
 
-5.	Explore the application by opening it in the web browser to visualize the COVID-19 case data on the time series graph.
+2. **Clone the Git Repository**:
+   - Run the following command to clone the repository:
+     ```sh
+     git clone https://github.com/ADecode-win/Covid_code.git
+     ```
+
+3. **Navigate to the Directory**:
+   - Change to the directory of the project:
+     ```sh
+     cd Covid_code/Backend
+     ```
+
+4. **Run the Application**:
+   - There are two ways to run the application:
+
+   **Running with Shell Script**:
+   - Make the script executable and then run it:
+     ```sh
+     chmod +x run_docker.sh
+     ./run_docker.sh
+     ```
+
+   **Running with Docker Compose**:
+   - Build and run the application using Docker Compose:
+     ```sh
+     docker-compose up --build
+     ```
+
+5. **Explore the Application**:
+   - Open the application in the web browser to visualize the COVID-19 case data on the time series graph.
+
 
