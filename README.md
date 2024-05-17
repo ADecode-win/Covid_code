@@ -2,7 +2,7 @@
 
 
 ## Overview
-This application provides an interactive and user-friendly platform for visualizing COVID-19 case data across European countries throughout the year 2020. Designed with simplicity and ease of use, it offers tools to analyze pandemic trends over time.
+This application provides an interactive and user-friendly platform for visualizing COVID-19 case data across European countries throughout the year 2020. Designed with simplicity and ease of use, it offers tool to analyze pandemic trends over time.
 
 The repository consists of static files:
 
@@ -18,7 +18,7 @@ The data is sourced from the European Centre for Disease Prevention and Control 
 - **Converting to FHIR Format**: The filtered_european_data.json file was converted to fhir_bundle.json using a script at Covid_code/Backend/app/create_fhir_bundle.py. Although the fhir_bundle.json file is large, it is included for completeness and can also be downloaded within the application.
 
 ### Sample Data
-To ensure visualization compatibility with the FHIR format, a sample from the filtered_european_data.json was extracted and converted to the standard JSON format, stored in sample.json. This sample was then converted to FHIR format and stored in fhir_sample.json.
+To ensure visualization compatibility with the FHIR format, a sample from the filtered_european_data.json was extracted and converted to the standard JSON format, stored in sample.json. This sample was then converted to FHIR format and stored in fhir_sample.json and can be downloaded within the application.
 
 ## App Interoperability
 This application supports interoperability by accepting a standardised JSON file (sample.json) and converting it into FHIR format (fhir_sample.json) via a POST request. The process is as follows:
@@ -39,13 +39,13 @@ This application supports interoperability by accepting a standardised JSON file
 
 ## Key Features
 ### Interactive Time Series Visualization
-- **Graphical Display**: View the total number of COVID-19 cases displayed over time on a clean and clear graph. Each point on the graph represents a specific date in the dd.mm.yyyy format with the ability to see details about cases and deaths on hover.
+- **Graphical Display**: View the total number of COVID-19 cases displayed over time on a clean and clear graph. Each data point(red circles) on the graph represents a specific date in the dd.mm.yyyy format with the ability to see details about cases and deaths on hover.
 - **Country and Month Selection**: Customize data views by selecting specific countries and months using dropdown menus, or choose "None" to view the data for the entire year without any monthly segmentation.
-- **Data Point Interactivity**: Hover over any red dot on the graph to reveal detailed data for that date, including the number of cases and deaths, enhancing the informational value of the visualization.
+- **Data Point Interactivity**: Hover over any red circles on the graph to reveal detailed data for that date, including the number of cases and deaths, enhancing the informational value of the visualization.
 - **Visualize Button**: Enables visualization of the graph when a file is uploaded.
 - **Remove Button**: Allows removal of any displayed graphs.
 ### Data Interaction
-- **Slider Functionality**: A slider allows users to play through the entire year's data, providing a dynamic overview of the pandemic’s development. This is useful for presentations and educational purposes, offering a visual timeline of the spread.
+- **Slider Functionality**: A slider allows users to play through the entire year's data, providing a dynamic overview of the pandemic’s development. 
 - **Hide/Show Data Points**: Toggle to hide or show data points on the graph for a clearer view of trends without individual day interruptions.
 ### FHIR JSON Integration
 - **Drag and Drop Upload**: Supports uploading of FHIR JSON format files through a drag-and-drop interface, tailored for visualizing health data for individual countries. Ensure that each file uploaded contains data for a specific country only and not multiple countries, to maintain the visualization's clarity and accuracy.
